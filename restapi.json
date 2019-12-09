@@ -9,13 +9,13 @@
     "http"
   ],
   "paths": {
-    "/": {
+    "/settings/account": {
       "get": {
         "tags": [
           "Account Settings"
         ],
         "summary": "Get the account settings",
-        "operationId": "get",
+        "operationId": "getSettingsAccount",
         "produces": [
           "application/json"
         ],
