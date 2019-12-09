@@ -330,6 +330,7 @@
         },
         "VatRate": {
           "format": "double",
+          "description": "[DEPRECATED]",
           "type": "number"
         },
         "TaxRateCode": {
