@@ -1,0 +1,47 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "RestfulApi",
+    "version": "V1"
+  },
+  "host": "localhost:44300",
+  "schemes": [
+    "https"
+  ],
+  "paths": { },
+  "definitions": {
+    "RestfulApi.Models.AccountSettingsModel": {
+      "type": "object",
+      "properties": {
+        "AccountId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "ChargeCodeGroupTerm": {
+          "type": "string"
+        },
+        "ChargeCodeTerm": {
+          "type": "string"
+        },
+        "ChargeCodeGroupTermPlural": {
+          "type": "string"
+        },
+        "ChargeCodeTermPlural": {
+          "type": "string"
+        },
+        "EmployeeTerm": {
+          "type": "string"
+        },
+        "EmployeeTermPlural": {
+          "type": "string"
+        },
+        "DateFormat": {
+          "type": "string"
+        },
+        "TaxTerm": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
