@@ -63,17 +63,23 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "OK",
             "schema": {
               "type": "string",
               "example": "383!@MGT_13AGG"
             }
           },
           "403": {
-            "description": "Forbidden - Account is not authorised."
+            "description": "Forbidden",
+            "schema": {
+              "type": "object",
+              "example": {
+                "Message": "The details provided do not match an API authorised account. Please ensure that your details are correct. Contact support for further information."
+              }
+            }
           },
           "404": {
-            "description": "Bad Request - Usually if the request model is null"
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Exception"
