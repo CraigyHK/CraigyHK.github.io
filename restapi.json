@@ -15,17 +15,23 @@
           "Account Settings"
         ],
         "summary": "Get the account settings",
-        "description": "Where does this show?",
+        "description": "REMARKS GO HERE",
         "operationId": "getSettingsAccount",
         "produces": [
           "application/json"
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Account settings are returned",
             "schema": {
               "$ref": "#/definitions/RestfulApi.Models.AccountSettingsModel"
             }
+          },
+          "404": {
+            "description": "Bad Request - Usually if the requesting account has no account or charge code settings"
+          },
+          "500": {
+            "description": "Internal Server Exception"
           }
         }
       }
