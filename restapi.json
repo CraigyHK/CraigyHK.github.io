@@ -15,6 +15,7 @@
           "Account Settings"
         ],
         "summary": "Get the account settings",
+        "description": "Where does this show?",
         "operationId": "getSettingsAccount",
         "produces": [
           "application/json"
