@@ -35,6 +35,78 @@
           }
         }
       }
+    },
+    "/token": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Authorise and receive a token.",
+        "description": "REMARKS GO HERE",
+        "operationId": "postToken",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Token Request Model",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RestfulApi.Models.TokenRequestModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token is returned",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Account is not authorised."
+          },
+          "404": {
+            "description": "Bad Request - Usually if the request model is null"
+          },
+          "500": {
+            "description": "Internal Server Exception"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Authorise and receive a token.",
+        "description": "REMARKS GO HERE",
+        "operationId": "getToken",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token is returned",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Account is not authorised."
+          },
+          "404": {
+            "description": "Bad Request - Usually if the request model is null"
+          },
+          "500": {
+            "description": "Internal Server Exception"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -67,6 +139,20 @@
           "type": "string"
         },
         "TaxTerm": {
+          "type": "string"
+        }
+      }
+    },
+    "RestfulApi.Models.TokenRequestModel": {
+      "type": "object",
+      "properties": {
+        "Email": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        },
+        "AccountName": {
           "type": "string"
         }
       }
