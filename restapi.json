@@ -63,9 +63,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Token is returned",
+            "description": "",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "383!@MGT_13AGG"
             }
           },
           "403": {
