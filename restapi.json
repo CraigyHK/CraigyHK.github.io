@@ -82,7 +82,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "List of user codes to search for",
+            "description": "List of user models to update",
             "required": true,
             "schema": {
               "type": "array",
@@ -97,6 +97,47 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/RestfulApi.Models.ResponseModel"
+            }
+          }
+        }
+      }
+    },
+    "/users/search": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a list of user objects, by searching for user codes",
+        "description": "REMARKS GO HERE",
+        "operationId": "getUsersSearch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of user codes to search for",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RestfulApi.Models.EmployeeModel"
+              }
             }
           }
         }
