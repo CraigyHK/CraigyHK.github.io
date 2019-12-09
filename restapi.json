@@ -6,9 +6,30 @@
   },
   "host": "localhost:44300",
   "schemes": [
-    "https"
+    "http"
   ],
-  "paths": { },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Account Settings"
+        ],
+        "summary": "Get the account settings",
+        "operationId": "get",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RestfulApi.Models.AccountSettingsModel"
+            }
+          }
+        }
+      }
+    }
+  },
   "definitions": {
     "RestfulApi.Models.AccountSettingsModel": {
       "type": "object",
