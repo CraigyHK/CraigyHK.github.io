@@ -36,6 +36,72 @@
         }
       }
     },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a single record for a user",
+        "description": "REMARKS GO HERE",
+        "operationId": "getUsers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "description": "AccountId",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RestfulApi.Models.EmployeeModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Add or update multiple users",
+        "description": "REMARKS GO HERE",
+        "operationId": "postUsers",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of user codes to search for",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RestfulApi.Models.EmployeeModel"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RestfulApi.Models.ResponseModel"
+            }
+          }
+        }
+      }
+    },
     "/token": {
       "post": {
         "tags": [
@@ -80,9 +146,6 @@
           },
           "404": {
             "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Exception"
           }
         }
       },
@@ -98,19 +161,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Token is returned",
+            "description": "OK",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "383!@MGT_13AGG"
             }
           },
           "403": {
-            "description": "Forbidden - Account is not authorised."
+            "description": "Forbidden"
           },
           "404": {
-            "description": "Bad Request - Usually if the request model is null"
-          },
-          "500": {
-            "description": "Internal Server Exception"
+            "description": "Bad Request"
           }
         }
       }
@@ -147,6 +208,2451 @@
         },
         "TaxTerm": {
           "type": "string"
+        }
+      }
+    },
+    "RestfulApi.Models.EmployeeModel": {
+      "type": "object",
+      "properties": {
+        "JobTitle": {
+          "description": "Job title. Appears on signed timesheets for approvers",
+          "type": "string"
+        },
+        "EmployeeRole": {
+          "description": "Employee role code",
+          "type": "string"
+        },
+        "JoinDate": {
+          "format": "date-time",
+          "description": "Join date. Defines the first day which the user is able to submit timesheets / expenses",
+          "type": "string"
+        },
+        "LeaveDate": {
+          "format": "date-time",
+          "description": "Defines the last day the user is allowed to access the system",
+          "type": "string"
+        },
+        "DateOfBirth": {
+          "format": "date-time",
+          "description": "Date of birth",
+          "type": "string"
+        },
+        "Address": {
+          "$ref": "#/definitions/RestfulApi.Models.AddressModel"
+        },
+        "EmployeeGroupCode": {
+          "type": "string"
+        },
+        "EmploymentType": {
+          "enum": [
+            "Unknown",
+            "Contractor",
+            "Temporary",
+            "LimitedCompany",
+            "UmbrellaCompany",
+            "Permanent",
+            "Interim",
+            "Partnership",
+            "LimitedLiabilityPartnership",
+            "NonUKEngagement",
+            "AnotherPartyOperatedPAYE"
+          ],
+          "type": "string"
+        },
+        "AccountingReference": {
+          "description": "[DEPRECATED]. Renamed to AccountingCode",
+          "type": "string"
+        },
+        "Gender": {
+          "description": "Gender",
+          "enum": [
+            "NotSpecified",
+            "Male",
+            "Female"
+          ],
+          "type": "string"
+        },
+        "CompanyName": {
+          "description": "(Limited company contractors) Employment company name",
+          "type": "string"
+        },
+        "CompanyReg": {
+          "description": "(Limited company contractors) Employment company registration number",
+          "type": "string"
+        },
+        "CompanyAddress": {
+          "$ref": "#/definitions/RestfulApi.Models.AddressModel"
+        },
+        "VatNumber": {
+          "description": "(Limited company contractors) Employment company tax number",
+          "type": "string"
+        },
+        "VatRate": {
+          "format": "double",
+          "description": "[DEPRECATED]",
+          "type": "number"
+        },
+        "TaxRateCode": {
+          "description": "(Limited company contractors) Employment company default tax code",
+          "type": "string"
+        },
+        "NationalInsuranceNumber": {
+          "description": "PAYE employees - National insurance number",
+          "type": "string"
+        },
+        "TaxNumber": {
+          "description": "PAYE employees - Unique tax reference or other local tax number",
+          "type": "string"
+        },
+        "ExcludeFromEmpIntReporting": {
+          "type": "boolean"
+        },
+        "EnableSelfBilling": {
+          "description": "Set to true to enable self billing for the user",
+          "type": "boolean"
+        },
+        "AllowViewOwnSelfBillingInvoices": {
+          "description": "Set to true to enable access for the user to view self billing invoices produced for them",
+          "type": "boolean"
+        },
+        "EmploymentDetails": {
+          "$ref": "#/definitions/RestfulApi.Models.UserEmploymentModel"
+        },
+        "SelfBillingInvoiceFooter": {
+          "type": "string"
+        },
+        "SelfBillingInvoiceEmails": {
+          "type": "string"
+        },
+        "SelfBillingPaymentTerms": {
+          "format": "int32",
+          "description": "Payment terms for self billing invoices created",
+          "type": "integer"
+        },
+        "NextOfKin": {
+          "description": "HR module - Next of kin name",
+          "type": "string"
+        },
+        "NextOfKinRelationship": {
+          "description": "HR module - Next of kin relationship",
+          "type": "string"
+        },
+        "NextOfKinContactDetails": {
+          "description": "HR module - Next of kin contact details",
+          "type": "string"
+        },
+        "Nationality": {
+          "description": "HR module - Nationality",
+          "type": "string"
+        },
+        "HomePhone": {
+          "description": "HR module - Home telephone number",
+          "type": "string"
+        },
+        "MaritalStatus": {
+          "description": "HR module - Marital status",
+          "enum": [
+            "NotSpecified",
+            "Single",
+            "Married",
+            "Divorced",
+            "Widowed",
+            "Partnership",
+            "Other"
+          ],
+          "type": "string"
+        },
+        "PassportNumber": {
+          "description": "HR module - Passport number",
+          "type": "string"
+        },
+        "BankName": {
+          "type": "string"
+        },
+        "BankAccountName": {
+          "type": "string"
+        },
+        "BranchCode": {
+          "type": "string"
+        },
+        "BankAccountNo": {
+          "type": "string"
+        },
+        "InternationalBankAccount": {
+          "type": "boolean"
+        },
+        "IBAN": {
+          "type": "string"
+        },
+        "SwiftCode": {
+          "type": "string"
+        },
+        "CustomFields": {
+          "$ref": "#/definitions/RestfulApi.Models.CustomFieldsModel"
+        },
+        "CustomFieldValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RestfulApi.Models.CustomFieldValueModel"
+          }
+        },
+        "NewStarterWorkflowCode": {
+          "type": "string"
+        },
+        "Email": {
+          "description": "User's email address. This must be unique across all user accounts including approvers and administrators",
+          "type": "string"
+        },
+        "UserCode": {
+          "description": "Unique user code. This code is used to identify whether user being posted is new or an update to an existing user",
+          "type": "string"
+        },
+        "FirstName": {
+          "description": "First name",
+          "type": "string"
+        },
+        "LastName": {
+          "description": "Last name",
+          "type": "string"
+        },
+        "Mobile": {
+          "type": "string"
+        },
+        "AccountingCode": {
+          "description": "Accounting code is usually used to reference payroll numbers in downstream systems",
+          "type": "string"
+        },
+        "SendNewAccountEmails": {
+          "description": "[DEPRECATED] Set to true if you want to send a welcome email to the new user",
+          "type": "boolean"
+        },
+        "SendNewAccountEmail": {
+          "description": "Set to true if you want to send a welcome email to the new user",
+          "type": "boolean"
+        },
+        "DisableEmailVerification": {
+          "description": "Set to true if you are using single sign on. This will prevent the warning shown for a user to validate their email address",
+          "type": "boolean"
+        },
+        "DisablePasswordSet": {
+          "description": "Set to true if you are using single sign on. This will hide the password reset controls from the user's profile page",
+          "type": "boolean"
+        },
+        "StandardPermissions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "FullAdministrator",
+              "LegacyEditJobs",
+              "LegacyManageExpenseForms",
+              "LEgacyClients",
+              "LegacyReports",
+              "LegacyEditTimesheetsForOwnJobs",
+              "LegacyTSPBillPayer",
+              "LegacyAdministrator",
+              "LegacyCostCentreManager",
+              "LegacyCostCentreViewAllTimesheets",
+              "LegacyCostCentreSubmitTimesheetsForEmployees",
+              "FullReportsAndInvoices",
+              "ReportingOwnManagees",
+              "CreateEditJobs",
+              "CreateEditDeleteClients",
+              "CreateEditContractors",
+              "TimesheetsSubmitTimesheets",
+              "TimesheetsSelfApprove",
+              "TimesheetsAddTasksToTimesheets",
+              "TimesheetsAdministrator",
+              "TimesheetsEditForOwnJobs",
+              "TimesheetsViewForOwnCompany",
+              "TimesheetsSubmitForCostCentre",
+              "TimesheetsViewForCostCentre",
+              "TimesheetsSubmitForManagees",
+              "TimesheetsEditForManagees",
+              "SubmitTimesheetForThirdPartyContractors",
+              "ExpensesSubmitExpenseForms",
+              "ExpensesSelfApprove",
+              "ExpensesAdministrator",
+              "CostCentreManager",
+              "ClientInvoicingAdministrator"
+            ],
+            "type": "string"
+          }
+        },
+        "Valid": {
+          "type": "boolean"
+        },
+        "ValidationErrors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ItemCode": {
+          "type": "string"
+        }
+      }
+    },
+    "RestfulApi.Models.AddressModel": {
+      "type": "object",
+      "properties": {
+        "Address1": {
+          "type": "string"
+        },
+        "Address2": {
+          "type": "string"
+        },
+        "Address3": {
+          "type": "string"
+        },
+        "PostCode": {
+          "type": "string"
+        },
+        "City": {
+          "type": "string"
+        },
+        "Mobile": {
+          "type": "string"
+        },
+        "Telephone": {
+          "type": "string"
+        },
+        "Country": {
+          "type": "string"
+        },
+        "CompanyName": {
+          "type": "string"
+        },
+        "CountryISOCode": {
+          "type": "string"
+        }
+      }
+    },
+    "RestfulApi.Models.UserEmploymentModel": {
+      "type": "object",
+      "properties": {
+        "NationalInsuranceNumber": {
+          "type": "string"
+        },
+        "TaxNumber": {
+          "type": "string"
+        },
+        "TaxCode": {
+          "type": "string"
+        },
+        "StudentLoanScheme": {
+          "enum": [
+            "Unknown",
+            "Plan1",
+            "Plan2"
+          ],
+          "type": "string"
+        },
+        "WorkingDays": {
+          "format": "byte",
+          "type": "string"
+        },
+        "UseAccountDefaultWorkingDays": {
+          "description": "If true then we derive the working days from the account default settings",
+          "type": "boolean"
+        },
+        "UseDailyContractedTime": {
+          "type": "boolean"
+        },
+        "WorkingTimeMonday": {
+          "format": "double",
+          "type": "number"
+        },
+        "WorkingTimeTuesday": {
+          "format": "double",
+          "type": "number"
+        },
+        "WorkingTimeWednesday": {
+          "format": "double",
+          "type": "number"
+        },
+        "WorkingTimeThursday": {
+          "format": "double",
+          "type": "number"
+        },
+        "WorkingTimeFriday": {
+          "format": "double",
+          "type": "number"
+        },
+        "WorkingTimeSaturday": {
+          "format": "double",
+          "type": "number"
+        },
+        "WorkingTimeSunday": {
+          "format": "double",
+          "type": "number"
+        },
+        "WorkingDaysPerWeek": {
+          "format": "float",
+          "type": "number"
+        },
+        "WorkingHoursPerWeek": {
+          "format": "float",
+          "type": "number"
+        },
+        "ExcludeFromEmpIntReporting": {
+          "type": "boolean"
+        },
+        "MaximumFlexitimeHoursOffPerMonth": {
+          "format": "float",
+          "type": "number"
+        },
+        "MinimumFlexitimeBooking": {
+          "format": "float",
+          "type": "number"
+        },
+        "CISStatus": {
+          "enum": [
+            "NonCIS",
+            "CISUnknown",
+            "Gross",
+            "Net"
+          ],
+          "type": "string"
+        },
+        "NationalInsuranceCategory": {
+          "enum": [
+            "Unknown",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "S",
+            "X",
+            "Z"
+          ],
+          "type": "string"
+        },
+        "NormalHoursBand": {
+          "enum": [
+            "Unknown",
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "type": "string"
+        },
+        "IrregularHours": {
+          "type": "boolean"
+        },
+        "TaxBasis": {
+          "enum": [
+            "Unknown",
+            "FirstWeek",
+            "Cumulative"
+          ],
+          "type": "string"
+        },
+        "ThirdPartyAgencyCode": {
+          "description": "Not in use yet.",
+          "type": "string"
+        },
+        "HmrcJobStatus": {
+          "enum": [
+            "Unknown",
+            "OptionA",
+            "OptionB",
+            "OptionC"
+          ],
+          "type": "string"
+        },
+        "HmrcLoanUnpaid": {
+          "type": "boolean"
+        },
+        "HmrcLoanOnMonthlyPayments": {
+          "type": "boolean"
+        },
+        "HmrcNewStarterDeclarationDate": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "HmrcStudiesCompletedBeforeApril": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RestfulApi.Models.CustomFieldsModel": {
+      "type": "object",
+      "properties": {
+        "CustomFieldString0": {
+          "type": "string"
+        },
+        "CustomFieldString1": {
+          "type": "string"
+        },
+        "CustomFieldString2": {
+          "type": "string"
+        },
+        "CustomFieldString3": {
+          "type": "string"
+        },
+        "CustomFieldString4": {
+          "type": "string"
+        },
+        "CustomFieldString5": {
+          "type": "string"
+        },
+        "CustomFieldString6": {
+          "type": "string"
+        },
+        "CustomFieldString7": {
+          "type": "string"
+        },
+        "CustomFieldString8": {
+          "type": "string"
+        },
+        "CustomFieldString9": {
+          "type": "string"
+        },
+        "CustomFieldList0": {
+          "type": "string"
+        },
+        "CustomFieldList1": {
+          "type": "string"
+        },
+        "CustomFieldList2": {
+          "type": "string"
+        },
+        "CustomFieldList3": {
+          "type": "string"
+        },
+        "CustomFieldList4": {
+          "type": "string"
+        },
+        "CustomFieldList5": {
+          "type": "string"
+        },
+        "CustomFieldList6": {
+          "type": "string"
+        },
+        "CustomFieldList7": {
+          "type": "string"
+        },
+        "CustomFieldList8": {
+          "type": "string"
+        },
+        "CustomFieldList9": {
+          "type": "string"
+        },
+        "CustomFieldInt0": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt1": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt2": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt3": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt4": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt5": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt6": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt7": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt8": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldInt9": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomFieldDecimal0": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal1": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal2": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal3": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal4": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal5": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal6": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal7": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal8": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldDecimal9": {
+          "format": "double",
+          "type": "number"
+        },
+        "CustomFieldBool0": {
+          "type": "boolean"
+        },
+        "CustomFieldBool1": {
+          "type": "boolean"
+        },
+        "CustomFieldBool2": {
+          "type": "boolean"
+        },
+        "CustomFieldBool3": {
+          "type": "boolean"
+        },
+        "CustomFieldBool4": {
+          "type": "boolean"
+        },
+        "CustomFieldBool5": {
+          "type": "boolean"
+        },
+        "CustomFieldBool6": {
+          "type": "boolean"
+        },
+        "CustomFieldBool7": {
+          "type": "boolean"
+        },
+        "CustomFieldBool8": {
+          "type": "boolean"
+        },
+        "CustomFieldBool9": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RestfulApi.Models.CustomFieldValueModel": {
+      "type": "object",
+      "properties": {
+        "FieldName": {
+          "type": "string"
+        },
+        "FieldTarget": {
+          "enum": [
+            "ChargeCode",
+            "Client",
+            "ChargeCodeGroup",
+            "Employee"
+          ],
+          "type": "string"
+        },
+        "FieldIndex": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "DataType": {
+          "enum": [
+            "String",
+            "DropDown",
+            "Int",
+            "Decimal",
+            "Bool",
+            "CustomDropDown",
+            "Percentage"
+          ],
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        }
+      }
+    },
+    "RestfulApi.Models.ResponseModel": {
+      "type": "object",
+      "properties": {
+        "Success": {
+          "type": "boolean"
+        },
+        "Message": {
+          "type": "string"
+        },
+        "ReturnObject": {
+          "type": "object"
+        },
+        "RecordsUpdated": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "RecordsCreated": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "RecordsCreatedCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ErrorCode": {
+          "description": "API Error code",
+          "enum": [
+            "OK",
+            "GeneralError",
+            "DatabaseError",
+            "AuthenticationFailed",
+            "MissingAdministratorPermission",
+            "UserCodeNotFound",
+            "ClientCodeNotFound",
+            "ClientCodeAlreadyExists",
+            "ClientNameAlreadyExists",
+            "ProjectCodeNotFound",
+            "ProjectCodeAlreadyExists",
+            "ProjectNameAlreadyExists",
+            "ProjectExistsDeleted",
+            "ProjectCategoryCodeNotFound",
+            "RateCodeNotFound",
+            "CostCentreCodeNotFound",
+            "ReportNoStatusFiltersDefined",
+            "ReportMissingParameter",
+            "ListItemCodeAlreadyExists",
+            "ListItemNameAlreadyExists",
+            "ListItemCodeNotFound",
+            "EmployeeGroupCodeNotFound",
+            "InvoiceNotFound",
+            "DuplicateInvoiceNumber"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "System.Exception": {
+      "type": "object",
+      "properties": {
+        "Message": {
+          "type": "string"
+        },
+        "Data": {
+          "type": "array",
+          "items": { }
+        },
+        "InnerException": {
+          "$ref": "#/definitions/System.Exception"
+        },
+        "TargetSite": {
+          "$ref": "#/definitions/System.Reflection.MethodBase"
+        },
+        "StackTrace": {
+          "type": "string"
+        },
+        "HelpLink": {
+          "type": "string"
+        },
+        "Source": {
+          "type": "string"
+        },
+        "HResult": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "System.Reflection.MethodBase": {
+      "type": "object",
+      "properties": {
+        "MethodImplementationFlags": {
+          "enum": [
+            "IL",
+            "Managed",
+            "Native",
+            "OPTIL",
+            "Runtime",
+            "CodeTypeMask",
+            "Unmanaged",
+            "ManagedMask",
+            "NoInlining",
+            "ForwardRef",
+            "Synchronized",
+            "NoOptimization",
+            "PreserveSig",
+            "AggressiveInlining",
+            "SecurityMitigations",
+            "InternalCall",
+            "MaxMethodImplVal"
+          ],
+          "type": "string"
+        },
+        "MethodHandle": {
+          "$ref": "#/definitions/System.RuntimeMethodHandle"
+        },
+        "Attributes": {
+          "enum": [
+            "ReuseSlot",
+            "PrivateScope",
+            "Private",
+            "FamANDAssem",
+            "Assembly",
+            "Family",
+            "FamORAssem",
+            "Public",
+            "MemberAccessMask",
+            "UnmanagedExport",
+            "Static",
+            "Final",
+            "Virtual",
+            "HideBySig",
+            "NewSlot",
+            "VtableLayoutMask",
+            "CheckAccessOnOverride",
+            "Abstract",
+            "SpecialName",
+            "RTSpecialName",
+            "PinvokeImpl",
+            "HasSecurity",
+            "RequireSecObject",
+            "ReservedMask"
+          ],
+          "type": "string"
+        },
+        "CallingConvention": {
+          "enum": [
+            "Standard",
+            "VarArgs",
+            "Any",
+            "HasThis",
+            "ExplicitThis"
+          ],
+          "type": "string"
+        },
+        "IsGenericMethodDefinition": {
+          "type": "boolean"
+        },
+        "ContainsGenericParameters": {
+          "type": "boolean"
+        },
+        "IsGenericMethod": {
+          "type": "boolean"
+        },
+        "IsSecurityCritical": {
+          "type": "boolean"
+        },
+        "IsSecuritySafeCritical": {
+          "type": "boolean"
+        },
+        "IsSecurityTransparent": {
+          "type": "boolean"
+        },
+        "IsPublic": {
+          "type": "boolean"
+        },
+        "IsPrivate": {
+          "type": "boolean"
+        },
+        "IsFamily": {
+          "type": "boolean"
+        },
+        "IsAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyAndAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyOrAssembly": {
+          "type": "boolean"
+        },
+        "IsStatic": {
+          "type": "boolean"
+        },
+        "IsFinal": {
+          "type": "boolean"
+        },
+        "IsVirtual": {
+          "type": "boolean"
+        },
+        "IsHideBySig": {
+          "type": "boolean"
+        },
+        "IsAbstract": {
+          "type": "boolean"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "IsConstructor": {
+          "type": "boolean"
+        },
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        }
+      }
+    },
+    "System.RuntimeMethodHandle": {
+      "type": "object",
+      "properties": {
+        "Value": {
+          "$ref": "#/definitions/System.IntPtr"
+        }
+      }
+    },
+    "System.IntPtr": {
+      "type": "object",
+      "properties": {
+        "Size": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "System.Type": {
+      "type": "object",
+      "properties": {
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "DeclaringMethod": {
+          "$ref": "#/definitions/System.Reflection.MethodBase"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "StructLayoutAttribute": {
+          "$ref": "#/definitions/System.Runtime.InteropServices.StructLayoutAttribute"
+        },
+        "GUID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "DefaultBinder": {
+          "$ref": "#/definitions/System.Reflection.Binder"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        },
+        "Assembly": {
+          "$ref": "#/definitions/System.Reflection.Assembly"
+        },
+        "TypeHandle": {
+          "$ref": "#/definitions/System.RuntimeTypeHandle"
+        },
+        "FullName": {
+          "type": "string"
+        },
+        "Namespace": {
+          "type": "string"
+        },
+        "AssemblyQualifiedName": {
+          "type": "string"
+        },
+        "BaseType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "TypeInitializer": {
+          "$ref": "#/definitions/System.Reflection.ConstructorInfo"
+        },
+        "IsNested": {
+          "type": "boolean"
+        },
+        "Attributes": {
+          "enum": [
+            "NotPublic",
+            "AutoLayout",
+            "AnsiClass",
+            "Class",
+            "Public",
+            "NestedPublic",
+            "NestedPrivate",
+            "NestedFamily",
+            "NestedAssembly",
+            "NestedFamANDAssem",
+            "NestedFamORAssem",
+            "VisibilityMask",
+            "SequentialLayout",
+            "ExplicitLayout",
+            "LayoutMask",
+            "Interface",
+            "ClassSemanticsMask",
+            "Abstract",
+            "Sealed",
+            "SpecialName",
+            "RTSpecialName",
+            "Import",
+            "Serializable",
+            "WindowsRuntime",
+            "UnicodeClass",
+            "AutoClass",
+            "StringFormatMask",
+            "CustomFormatClass",
+            "HasSecurity",
+            "ReservedMask",
+            "BeforeFieldInit",
+            "CustomFormatMask"
+          ],
+          "type": "string"
+        },
+        "GenericParameterAttributes": {
+          "enum": [
+            "None",
+            "Covariant",
+            "Contravariant",
+            "VarianceMask",
+            "ReferenceTypeConstraint",
+            "NotNullableValueTypeConstraint",
+            "DefaultConstructorConstraint",
+            "SpecialConstraintMask"
+          ],
+          "type": "string"
+        },
+        "IsVisible": {
+          "type": "boolean"
+        },
+        "IsNotPublic": {
+          "type": "boolean"
+        },
+        "IsPublic": {
+          "type": "boolean"
+        },
+        "IsNestedPublic": {
+          "type": "boolean"
+        },
+        "IsNestedPrivate": {
+          "type": "boolean"
+        },
+        "IsNestedFamily": {
+          "type": "boolean"
+        },
+        "IsNestedAssembly": {
+          "type": "boolean"
+        },
+        "IsNestedFamANDAssem": {
+          "type": "boolean"
+        },
+        "IsNestedFamORAssem": {
+          "type": "boolean"
+        },
+        "IsAutoLayout": {
+          "type": "boolean"
+        },
+        "IsLayoutSequential": {
+          "type": "boolean"
+        },
+        "IsExplicitLayout": {
+          "type": "boolean"
+        },
+        "IsClass": {
+          "type": "boolean"
+        },
+        "IsInterface": {
+          "type": "boolean"
+        },
+        "IsValueType": {
+          "type": "boolean"
+        },
+        "IsAbstract": {
+          "type": "boolean"
+        },
+        "IsSealed": {
+          "type": "boolean"
+        },
+        "IsEnum": {
+          "type": "boolean"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "IsImport": {
+          "type": "boolean"
+        },
+        "IsSerializable": {
+          "type": "boolean"
+        },
+        "IsAnsiClass": {
+          "type": "boolean"
+        },
+        "IsUnicodeClass": {
+          "type": "boolean"
+        },
+        "IsAutoClass": {
+          "type": "boolean"
+        },
+        "IsArray": {
+          "type": "boolean"
+        },
+        "IsGenericType": {
+          "type": "boolean"
+        },
+        "IsGenericTypeDefinition": {
+          "type": "boolean"
+        },
+        "IsConstructedGenericType": {
+          "type": "boolean"
+        },
+        "IsGenericParameter": {
+          "type": "boolean"
+        },
+        "GenericParameterPosition": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "ContainsGenericParameters": {
+          "type": "boolean"
+        },
+        "IsByRef": {
+          "type": "boolean"
+        },
+        "IsPointer": {
+          "type": "boolean"
+        },
+        "IsPrimitive": {
+          "type": "boolean"
+        },
+        "IsCOMObject": {
+          "type": "boolean"
+        },
+        "HasElementType": {
+          "type": "boolean"
+        },
+        "IsContextful": {
+          "type": "boolean"
+        },
+        "IsMarshalByRef": {
+          "type": "boolean"
+        },
+        "GenericTypeArguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Type"
+          }
+        },
+        "IsSecurityCritical": {
+          "type": "boolean"
+        },
+        "IsSecuritySafeCritical": {
+          "type": "boolean"
+        },
+        "IsSecurityTransparent": {
+          "type": "boolean"
+        },
+        "UnderlyingSystemType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "System.Runtime.InteropServices.StructLayoutAttribute": {
+      "type": "object",
+      "properties": {
+        "Value": {
+          "enum": [
+            "Sequential",
+            "Explicit",
+            "Auto"
+          ],
+          "type": "string"
+        },
+        "TypeId": {
+          "type": "object"
+        }
+      }
+    },
+    "System.Reflection.Binder": {
+      "type": "object"
+    },
+    "System.Reflection.Module": {
+      "type": "object",
+      "properties": {
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MDStreamVersion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "FullyQualifiedName": {
+          "type": "string"
+        },
+        "ModuleVersionId": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "ScopeName": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Assembly": {
+          "$ref": "#/definitions/System.Reflection.Assembly"
+        },
+        "ModuleHandle": {
+          "$ref": "#/definitions/System.ModuleHandle"
+        }
+      }
+    },
+    "System.Reflection.CustomAttributeData": {
+      "type": "object",
+      "properties": {
+        "AttributeType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "Constructor": {
+          "$ref": "#/definitions/System.Reflection.ConstructorInfo"
+        },
+        "ConstructorArguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeTypedArgument"
+          }
+        },
+        "NamedArguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeNamedArgument"
+          }
+        }
+      }
+    },
+    "System.Reflection.ConstructorInfo": {
+      "type": "object",
+      "properties": {
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "MethodImplementationFlags": {
+          "enum": [
+            "IL",
+            "Managed",
+            "Native",
+            "OPTIL",
+            "Runtime",
+            "CodeTypeMask",
+            "Unmanaged",
+            "ManagedMask",
+            "NoInlining",
+            "ForwardRef",
+            "Synchronized",
+            "NoOptimization",
+            "PreserveSig",
+            "AggressiveInlining",
+            "SecurityMitigations",
+            "InternalCall",
+            "MaxMethodImplVal"
+          ],
+          "type": "string"
+        },
+        "MethodHandle": {
+          "$ref": "#/definitions/System.RuntimeMethodHandle"
+        },
+        "Attributes": {
+          "enum": [
+            "ReuseSlot",
+            "PrivateScope",
+            "Private",
+            "FamANDAssem",
+            "Assembly",
+            "Family",
+            "FamORAssem",
+            "Public",
+            "MemberAccessMask",
+            "UnmanagedExport",
+            "Static",
+            "Final",
+            "Virtual",
+            "HideBySig",
+            "NewSlot",
+            "VtableLayoutMask",
+            "CheckAccessOnOverride",
+            "Abstract",
+            "SpecialName",
+            "RTSpecialName",
+            "PinvokeImpl",
+            "HasSecurity",
+            "RequireSecObject",
+            "ReservedMask"
+          ],
+          "type": "string"
+        },
+        "CallingConvention": {
+          "enum": [
+            "Standard",
+            "VarArgs",
+            "Any",
+            "HasThis",
+            "ExplicitThis"
+          ],
+          "type": "string"
+        },
+        "IsGenericMethodDefinition": {
+          "type": "boolean"
+        },
+        "ContainsGenericParameters": {
+          "type": "boolean"
+        },
+        "IsGenericMethod": {
+          "type": "boolean"
+        },
+        "IsSecurityCritical": {
+          "type": "boolean"
+        },
+        "IsSecuritySafeCritical": {
+          "type": "boolean"
+        },
+        "IsSecurityTransparent": {
+          "type": "boolean"
+        },
+        "IsPublic": {
+          "type": "boolean"
+        },
+        "IsPrivate": {
+          "type": "boolean"
+        },
+        "IsFamily": {
+          "type": "boolean"
+        },
+        "IsAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyAndAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyOrAssembly": {
+          "type": "boolean"
+        },
+        "IsStatic": {
+          "type": "boolean"
+        },
+        "IsFinal": {
+          "type": "boolean"
+        },
+        "IsVirtual": {
+          "type": "boolean"
+        },
+        "IsHideBySig": {
+          "type": "boolean"
+        },
+        "IsAbstract": {
+          "type": "boolean"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "IsConstructor": {
+          "type": "boolean"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        }
+      }
+    },
+    "System.Reflection.CustomAttributeTypedArgument": {
+      "type": "object",
+      "properties": {
+        "ArgumentType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "Value": {
+          "type": "object"
+        }
+      }
+    },
+    "System.Reflection.CustomAttributeNamedArgument": {
+      "type": "object",
+      "properties": {
+        "MemberInfo": {
+          "$ref": "#/definitions/System.Reflection.MemberInfo"
+        },
+        "TypedValue": {
+          "$ref": "#/definitions/System.Reflection.CustomAttributeTypedArgument"
+        },
+        "MemberName": {
+          "type": "string"
+        },
+        "IsField": {
+          "type": "boolean"
+        }
+      }
+    },
+    "System.Reflection.MemberInfo": {
+      "type": "object",
+      "properties": {
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        }
+      }
+    },
+    "System.Reflection.Assembly": {
+      "type": "object",
+      "properties": {
+        "CodeBase": {
+          "type": "string"
+        },
+        "EscapedCodeBase": {
+          "type": "string"
+        },
+        "FullName": {
+          "type": "string"
+        },
+        "EntryPoint": {
+          "$ref": "#/definitions/System.Reflection.MethodInfo"
+        },
+        "ExportedTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Type"
+          }
+        },
+        "DefinedTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.TypeInfo"
+          }
+        },
+        "Evidence": {
+          "type": "array",
+          "items": { }
+        },
+        "PermissionSet": {
+          "type": "array",
+          "items": { }
+        },
+        "IsFullyTrusted": {
+          "type": "boolean"
+        },
+        "SecurityRuleSet": {
+          "enum": [
+            "None",
+            "Level1",
+            "Level2"
+          ],
+          "type": "string"
+        },
+        "ManifestModule": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "ReflectionOnly": {
+          "type": "boolean"
+        },
+        "Modules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.Module"
+          }
+        },
+        "Location": {
+          "type": "string"
+        },
+        "ImageRuntimeVersion": {
+          "type": "string"
+        },
+        "GlobalAssemblyCache": {
+          "type": "boolean"
+        },
+        "HostContext": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "IsDynamic": {
+          "type": "boolean"
+        }
+      }
+    },
+    "System.Reflection.MethodInfo": {
+      "type": "object",
+      "properties": {
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "ReturnType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReturnParameter": {
+          "$ref": "#/definitions/System.Reflection.ParameterInfo"
+        },
+        "ReturnTypeCustomAttributes": {
+          "$ref": "#/definitions/System.Reflection.ICustomAttributeProvider"
+        },
+        "MethodImplementationFlags": {
+          "enum": [
+            "IL",
+            "Managed",
+            "Native",
+            "OPTIL",
+            "Runtime",
+            "CodeTypeMask",
+            "Unmanaged",
+            "ManagedMask",
+            "NoInlining",
+            "ForwardRef",
+            "Synchronized",
+            "NoOptimization",
+            "PreserveSig",
+            "AggressiveInlining",
+            "SecurityMitigations",
+            "InternalCall",
+            "MaxMethodImplVal"
+          ],
+          "type": "string"
+        },
+        "MethodHandle": {
+          "$ref": "#/definitions/System.RuntimeMethodHandle"
+        },
+        "Attributes": {
+          "enum": [
+            "ReuseSlot",
+            "PrivateScope",
+            "Private",
+            "FamANDAssem",
+            "Assembly",
+            "Family",
+            "FamORAssem",
+            "Public",
+            "MemberAccessMask",
+            "UnmanagedExport",
+            "Static",
+            "Final",
+            "Virtual",
+            "HideBySig",
+            "NewSlot",
+            "VtableLayoutMask",
+            "CheckAccessOnOverride",
+            "Abstract",
+            "SpecialName",
+            "RTSpecialName",
+            "PinvokeImpl",
+            "HasSecurity",
+            "RequireSecObject",
+            "ReservedMask"
+          ],
+          "type": "string"
+        },
+        "CallingConvention": {
+          "enum": [
+            "Standard",
+            "VarArgs",
+            "Any",
+            "HasThis",
+            "ExplicitThis"
+          ],
+          "type": "string"
+        },
+        "IsGenericMethodDefinition": {
+          "type": "boolean"
+        },
+        "ContainsGenericParameters": {
+          "type": "boolean"
+        },
+        "IsGenericMethod": {
+          "type": "boolean"
+        },
+        "IsSecurityCritical": {
+          "type": "boolean"
+        },
+        "IsSecuritySafeCritical": {
+          "type": "boolean"
+        },
+        "IsSecurityTransparent": {
+          "type": "boolean"
+        },
+        "IsPublic": {
+          "type": "boolean"
+        },
+        "IsPrivate": {
+          "type": "boolean"
+        },
+        "IsFamily": {
+          "type": "boolean"
+        },
+        "IsAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyAndAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyOrAssembly": {
+          "type": "boolean"
+        },
+        "IsStatic": {
+          "type": "boolean"
+        },
+        "IsFinal": {
+          "type": "boolean"
+        },
+        "IsVirtual": {
+          "type": "boolean"
+        },
+        "IsHideBySig": {
+          "type": "boolean"
+        },
+        "IsAbstract": {
+          "type": "boolean"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "IsConstructor": {
+          "type": "boolean"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        }
+      }
+    },
+    "System.Reflection.ParameterInfo": {
+      "type": "object",
+      "properties": {
+        "ParameterType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "HasDefaultValue": {
+          "type": "boolean"
+        },
+        "DefaultValue": {
+          "type": "object"
+        },
+        "RawDefaultValue": {
+          "type": "object"
+        },
+        "Position": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Attributes": {
+          "enum": [
+            "None",
+            "In",
+            "Out",
+            "Lcid",
+            "Retval",
+            "Optional",
+            "HasDefault",
+            "HasFieldMarshal",
+            "Reserved3",
+            "Reserved4",
+            "ReservedMask"
+          ],
+          "type": "string"
+        },
+        "Member": {
+          "$ref": "#/definitions/System.Reflection.MemberInfo"
+        },
+        "IsIn": {
+          "type": "boolean"
+        },
+        "IsOut": {
+          "type": "boolean"
+        },
+        "IsLcid": {
+          "type": "boolean"
+        },
+        "IsRetval": {
+          "type": "boolean"
+        },
+        "IsOptional": {
+          "type": "boolean"
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        }
+      }
+    },
+    "System.Reflection.ICustomAttributeProvider": {
+      "type": "object"
+    },
+    "System.Reflection.TypeInfo": {
+      "type": "object",
+      "properties": {
+        "GenericTypeParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Type"
+          }
+        },
+        "DeclaredConstructors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.ConstructorInfo"
+          }
+        },
+        "DeclaredEvents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.EventInfo"
+          }
+        },
+        "DeclaredFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.FieldInfo"
+          }
+        },
+        "DeclaredMembers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.MemberInfo"
+          }
+        },
+        "DeclaredMethods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.MethodInfo"
+          }
+        },
+        "DeclaredNestedTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.TypeInfo"
+          }
+        },
+        "DeclaredProperties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.PropertyInfo"
+          }
+        },
+        "ImplementedInterfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Type"
+          }
+        },
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "DeclaringMethod": {
+          "$ref": "#/definitions/System.Reflection.MethodBase"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "StructLayoutAttribute": {
+          "$ref": "#/definitions/System.Runtime.InteropServices.StructLayoutAttribute"
+        },
+        "GUID": {
+          "format": "uuid",
+          "type": "string",
+          "example": "00000000-0000-0000-0000-000000000000"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        },
+        "Assembly": {
+          "$ref": "#/definitions/System.Reflection.Assembly"
+        },
+        "TypeHandle": {
+          "$ref": "#/definitions/System.RuntimeTypeHandle"
+        },
+        "FullName": {
+          "type": "string"
+        },
+        "Namespace": {
+          "type": "string"
+        },
+        "AssemblyQualifiedName": {
+          "type": "string"
+        },
+        "BaseType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "TypeInitializer": {
+          "$ref": "#/definitions/System.Reflection.ConstructorInfo"
+        },
+        "IsNested": {
+          "type": "boolean"
+        },
+        "Attributes": {
+          "enum": [
+            "NotPublic",
+            "AutoLayout",
+            "AnsiClass",
+            "Class",
+            "Public",
+            "NestedPublic",
+            "NestedPrivate",
+            "NestedFamily",
+            "NestedAssembly",
+            "NestedFamANDAssem",
+            "NestedFamORAssem",
+            "VisibilityMask",
+            "SequentialLayout",
+            "ExplicitLayout",
+            "LayoutMask",
+            "Interface",
+            "ClassSemanticsMask",
+            "Abstract",
+            "Sealed",
+            "SpecialName",
+            "RTSpecialName",
+            "Import",
+            "Serializable",
+            "WindowsRuntime",
+            "UnicodeClass",
+            "AutoClass",
+            "StringFormatMask",
+            "CustomFormatClass",
+            "HasSecurity",
+            "ReservedMask",
+            "BeforeFieldInit",
+            "CustomFormatMask"
+          ],
+          "type": "string"
+        },
+        "GenericParameterAttributes": {
+          "enum": [
+            "None",
+            "Covariant",
+            "Contravariant",
+            "VarianceMask",
+            "ReferenceTypeConstraint",
+            "NotNullableValueTypeConstraint",
+            "DefaultConstructorConstraint",
+            "SpecialConstraintMask"
+          ],
+          "type": "string"
+        },
+        "IsVisible": {
+          "type": "boolean"
+        },
+        "IsNotPublic": {
+          "type": "boolean"
+        },
+        "IsPublic": {
+          "type": "boolean"
+        },
+        "IsNestedPublic": {
+          "type": "boolean"
+        },
+        "IsNestedPrivate": {
+          "type": "boolean"
+        },
+        "IsNestedFamily": {
+          "type": "boolean"
+        },
+        "IsNestedAssembly": {
+          "type": "boolean"
+        },
+        "IsNestedFamANDAssem": {
+          "type": "boolean"
+        },
+        "IsNestedFamORAssem": {
+          "type": "boolean"
+        },
+        "IsAutoLayout": {
+          "type": "boolean"
+        },
+        "IsLayoutSequential": {
+          "type": "boolean"
+        },
+        "IsExplicitLayout": {
+          "type": "boolean"
+        },
+        "IsClass": {
+          "type": "boolean"
+        },
+        "IsInterface": {
+          "type": "boolean"
+        },
+        "IsValueType": {
+          "type": "boolean"
+        },
+        "IsAbstract": {
+          "type": "boolean"
+        },
+        "IsSealed": {
+          "type": "boolean"
+        },
+        "IsEnum": {
+          "type": "boolean"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "IsImport": {
+          "type": "boolean"
+        },
+        "IsSerializable": {
+          "type": "boolean"
+        },
+        "IsAnsiClass": {
+          "type": "boolean"
+        },
+        "IsUnicodeClass": {
+          "type": "boolean"
+        },
+        "IsAutoClass": {
+          "type": "boolean"
+        },
+        "IsArray": {
+          "type": "boolean"
+        },
+        "IsGenericType": {
+          "type": "boolean"
+        },
+        "IsGenericTypeDefinition": {
+          "type": "boolean"
+        },
+        "IsConstructedGenericType": {
+          "type": "boolean"
+        },
+        "IsGenericParameter": {
+          "type": "boolean"
+        },
+        "GenericParameterPosition": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "ContainsGenericParameters": {
+          "type": "boolean"
+        },
+        "IsByRef": {
+          "type": "boolean"
+        },
+        "IsPointer": {
+          "type": "boolean"
+        },
+        "IsPrimitive": {
+          "type": "boolean"
+        },
+        "IsCOMObject": {
+          "type": "boolean"
+        },
+        "HasElementType": {
+          "type": "boolean"
+        },
+        "IsContextful": {
+          "type": "boolean"
+        },
+        "IsMarshalByRef": {
+          "type": "boolean"
+        },
+        "GenericTypeArguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Type"
+          }
+        },
+        "IsSecurityCritical": {
+          "type": "boolean"
+        },
+        "IsSecuritySafeCritical": {
+          "type": "boolean"
+        },
+        "IsSecurityTransparent": {
+          "type": "boolean"
+        },
+        "UnderlyingSystemType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "System.Reflection.EventInfo": {
+      "type": "object",
+      "properties": {
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "Attributes": {
+          "enum": [
+            "None",
+            "SpecialName",
+            "ReservedMask",
+            "RTSpecialName"
+          ],
+          "type": "string"
+        },
+        "AddMethod": {
+          "$ref": "#/definitions/System.Reflection.MethodInfo"
+        },
+        "RemoveMethod": {
+          "$ref": "#/definitions/System.Reflection.MethodInfo"
+        },
+        "RaiseMethod": {
+          "$ref": "#/definitions/System.Reflection.MethodInfo"
+        },
+        "EventHandlerType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "IsMulticast": {
+          "type": "boolean"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        }
+      }
+    },
+    "System.Reflection.FieldInfo": {
+      "type": "object",
+      "properties": {
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "FieldHandle": {
+          "$ref": "#/definitions/System.RuntimeFieldHandle"
+        },
+        "FieldType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "Attributes": {
+          "enum": [
+            "PrivateScope",
+            "Private",
+            "FamANDAssem",
+            "Assembly",
+            "Family",
+            "FamORAssem",
+            "Public",
+            "FieldAccessMask",
+            "Static",
+            "InitOnly",
+            "Literal",
+            "NotSerialized",
+            "HasFieldRVA",
+            "SpecialName",
+            "RTSpecialName",
+            "HasFieldMarshal",
+            "PinvokeImpl",
+            "HasDefault",
+            "ReservedMask"
+          ],
+          "type": "string"
+        },
+        "IsPublic": {
+          "type": "boolean"
+        },
+        "IsPrivate": {
+          "type": "boolean"
+        },
+        "IsFamily": {
+          "type": "boolean"
+        },
+        "IsAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyAndAssembly": {
+          "type": "boolean"
+        },
+        "IsFamilyOrAssembly": {
+          "type": "boolean"
+        },
+        "IsStatic": {
+          "type": "boolean"
+        },
+        "IsInitOnly": {
+          "type": "boolean"
+        },
+        "IsLiteral": {
+          "type": "boolean"
+        },
+        "IsNotSerialized": {
+          "type": "boolean"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "IsPinvokeImpl": {
+          "type": "boolean"
+        },
+        "IsSecurityCritical": {
+          "type": "boolean"
+        },
+        "IsSecuritySafeCritical": {
+          "type": "boolean"
+        },
+        "IsSecurityTransparent": {
+          "type": "boolean"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        }
+      }
+    },
+    "System.RuntimeFieldHandle": {
+      "type": "object",
+      "properties": {
+        "Value": {
+          "$ref": "#/definitions/System.IntPtr"
+        }
+      }
+    },
+    "System.Reflection.PropertyInfo": {
+      "type": "object",
+      "properties": {
+        "MemberType": {
+          "enum": [
+            "Constructor",
+            "Event",
+            "Field",
+            "Method",
+            "Property",
+            "TypeInfo",
+            "Custom",
+            "NestedType",
+            "All"
+          ],
+          "type": "string"
+        },
+        "PropertyType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "Attributes": {
+          "enum": [
+            "None",
+            "SpecialName",
+            "RTSpecialName",
+            "HasDefault",
+            "Reserved2",
+            "Reserved3",
+            "Reserved4",
+            "ReservedMask"
+          ],
+          "type": "string"
+        },
+        "CanRead": {
+          "type": "boolean"
+        },
+        "CanWrite": {
+          "type": "boolean"
+        },
+        "GetMethod": {
+          "$ref": "#/definitions/System.Reflection.MethodInfo"
+        },
+        "SetMethod": {
+          "$ref": "#/definitions/System.Reflection.MethodInfo"
+        },
+        "IsSpecialName": {
+          "type": "boolean"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "ReflectedType": {
+          "$ref": "#/definitions/System.Type"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/System.Reflection.CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Module": {
+          "$ref": "#/definitions/System.Reflection.Module"
+        }
+      }
+    },
+    "System.RuntimeTypeHandle": {
+      "type": "object",
+      "properties": {
+        "Value": {
+          "$ref": "#/definitions/System.IntPtr"
+        }
+      }
+    },
+    "System.ModuleHandle": {
+      "type": "object",
+      "properties": {
+        "MDStreamVersion": {
+          "format": "int32",
+          "type": "integer"
         }
       }
     },
