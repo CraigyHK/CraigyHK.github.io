@@ -328,10 +328,6 @@
           "description": "(Limited company contractors) Employment company tax number",
           "type": "string"
         },
-        "VatRate": {
-          "format": "double",
-          "type": "number"
-        },
         "TaxRateCode": {
           "description": "(Limited company contractors) Employment company default tax code",
           "type": "string"
@@ -1002,7 +998,7 @@
         },
         "Data": {
           "type": "array",
-          "items": { }
+          "items": {}
         },
         "InnerException": {
           "$ref": "#/definitions/System.Exception"
@@ -1807,11 +1803,11 @@
         },
         "Evidence": {
           "type": "array",
-          "items": { }
+          "items": {}
         },
         "PermissionSet": {
           "type": "array",
-          "items": { }
+          "items": {}
         },
         "IsFullyTrusted": {
           "type": "boolean"
