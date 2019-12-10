@@ -300,10 +300,6 @@
           ],
           "type": "string"
         },
-        "AccountingReference": {
-          "description": "[DEPRECATED]. Renamed to AccountingCode",
-          "type": "string"
-        },
         "Gender": {
           "description": "Gender",
           "enum": [
